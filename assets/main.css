@@ -1,0 +1,121 @@
+body {
+  background: bisque;
+  padding: 80px;
+}
+
+form {
+  padding: 20px;
+  text-align: center;
+}
+.or {
+  text-align: center;
+}
+input[type="text"],
+input[type="submit"] {
+  background: bisque;
+  padding: 16px;
+  outline: none;
+  border: 3px solid rgb(155, 121, 80);
+  border-radius: 32px;
+  color: brown;
+  font-size: 1rem;
+  transition: 0.3s ease;
+}
+input[type="text"]:focus {
+  border: 1px solid rgb(155, 121, 80);
+}
+input[type="submit"] {
+  background: rgb(155, 121, 80);
+  color: bisque;
+  transition: 0.3s ease;
+}
+input[type="submit"]:hover {
+  cursor: pointer;
+  background: bisque;
+  color: rgb(155, 121, 80);
+}
+
+.fighting {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.fighter-left,
+.fighter-right {
+  position: relative;
+  border-radius: 24px;
+  color: white;
+  width: 45%;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.632);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border: 2px solid rgba(0, 0, 0, 0.632);
+}
+.fighter-left {
+  background: url("https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1129&q=80")
+    center/cover;
+  color: black;
+}
+.fighter-right {
+  background: url("https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1129&q=80")
+    center/cover;
+  color: black;
+}
+.vs {
+  width: 40%;
+}
+
+h2 {
+  position: absolute;
+  display: inline-block;
+  transform: translate(-50%);
+  left: 50%;
+  top: 30px;
+  font-size: 44px;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+h3 {
+  font-size: 64px;
+  text-transform: uppercase;
+}
+
+.style-player{
+  text-shadow: 0 0 10px blue;
+  color: rgb(0, 158, 250);
+  text-align: center;
+}
+
+.style-enemy{
+  text-shadow: 0 0 10px black;
+  color: red;
+  text-align: center;
+}
+
+.perso1{
+  color: blue;
+}
+
+.perso2{
+  color: red;
+}
+/* .dice {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%);
+  left: 50%;
+  bottom: 5%;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  border: 2px solid black;
+  font-size: 30px;
+  font-weight: bold;
+} */
