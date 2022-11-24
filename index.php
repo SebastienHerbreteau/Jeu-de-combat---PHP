@@ -1,21 +1,18 @@
 <?php
 // REQUIRE CLASSES
 require_once("class/Database.class.php");
-require_once("class/Personnage.class.php");
+require_once("class/Player.class.php");
 require_once("class/Dice.class.php");
-require_once("function.php");
+require_once("functions.php");
 // DATABASE CONNEXION
 $database = new Database("localhost", "combat", "root", "");
 $database->connect();
 $database->prepReq("SELECT * FROM personnage");
 $dice = new Dice();
-
 $listOfCharacters = $database->fetchData();
 if (isset($_GET['new-player'])) {
     $newPlayer = $_GET['new-player'];
 }
-
-
 
 ?>
 
@@ -32,10 +29,11 @@ if (isset($_GET['new-player'])) {
 </head>
 
 <body>
+    <audio src="assets/audio/SFtheme.mp3" autoplay></audio>
 
     <form method="get" action="index.php">
-        <input type="text" name="new-player">
-        <input type="submit" value="Créer ton personnage">
+        <input type="text" name="new-player" autofocus>
+        <input type="submit" value="Créer ton player">
         <?php
         if (isset($newPlayer)) {
             $database->create($newPlayer);
@@ -45,21 +43,38 @@ if (isset($_GET['new-player'])) {
     </form>
     <p class="or">OR</p>
 
+    <table>
+        <tr>
+            <th>Personnage</th>
+            <th>PV</th>
+        </tr>
+        <?php
+        foreach ($listOfCharacters as $character) {
+            echo " <tr>
+                        <td>$character[1] </td>
+                        <td>$character[2] </td>
+                        </tr>
+                ";
+        }
+        ?>
+    </table>
+
     <form method="get" action="index.php">
-        <select name="player" id="select-player">
-            <option value="">--Select Player--</option>
-            <?php
-            foreach ($listOfCharacters as $character) {
-                echo "<option name='" . $character[1] . "'>$character[1]</option>";
-            };
-            ?>
-        </select>
-        <select name="enemy" id="select-enemy">
-            <option value="">--Select Enemy--</option>
+
+        <select name="player1" id="select-player1">
+            <option value="">--Select Player 1--</option>
             <?php foreach ($listOfCharacters as $character) : ?>
                 <option name="<?= $character[1] ?>"><?= $character[1] ?></option> };
             <?php endforeach ?>
         </select>
+
+        <select name="player2" id="select-player2">
+            <option value="">--Select Player 2--</option>
+            <?php foreach ($listOfCharacters as $character) : ?>
+                <option name="<?= $character[1] ?>"><?= $character[1] ?></option> };
+            <?php endforeach ?>
+        </select>
+
         <input type='submit' value='Select CHARACTERS and fight!'>
     </form>
     <div class="fighting">
@@ -67,15 +82,15 @@ if (isset($_GET['new-player'])) {
         <div class="fighter-left">
             <h2>PLAYER 1</h2>
             <?php
-            if (isset($_GET['player'])) :
-                echo "<h3 class='style-player'>" . $_GET['player'] . "</h3>";
-                $playerInfos = $database->read($_GET['player']);
-                $playerInfos = $database->fetchData();
-                foreach ($playerInfos as $infoPlayer) {
-                    $player = $infoPlayer[1];
-                    $playerPV = $infoPlayer[2];
-                    $playerPower = $dice->launchDice();
-                    $personnage1 = new Personnage($player, $playerPV, $playerPower, 0);
+            if (isset($_GET['player1'])) :
+                echo "<h3 class='style-player1'>" . $_GET['player1'] . "</h3>";
+                $infos = $database->read($_GET['player1']);
+                $infos = $database->fetchData();
+                foreach ($infos as $info) {
+                    $nom = $info[1];
+                    $PV = $info[2];
+                    $power = $dice->launchDice();
+                    $player1 = new Player($nom, $PV, $power, 0);
                 }
             endif;
             ?>
@@ -83,17 +98,17 @@ if (isset($_GET['new-player'])) {
         <img class="vs" src="assets/img/versus.png">
         <div class="fighter-right">
 
-            <!----voir toLowerCase()- - strtolower(sttring)---->
+
             <h2>PLAYER 2</h2>
-            <?php if (isset($_GET['enemy'])) :
-                echo "<h3 class='style-enemy'>" . $_GET['enemy'] . "</h3>";
-                $enemyInfos = $database->read($_GET['player']);
-                $enemyInfos = $database->fetchData();
-                foreach ($enemyInfos as $infoEnemy) {
-                    $enemy = $infoEnemy[1];
-                    $enemyPV = $infoEnemy[2];
-                    $enemyPower = $dice->launchDice();
-                    $personnage2 = new Personnage($enemy, $enemyPV, $enemyPower, 0);
+            <?php if (isset($_GET['player2'])) :
+                echo "<h3 class='style-player2'>" . $_GET['player2'] . "</h3>";
+                $infos = $database->read($_GET['player2']);
+                $infos = $database->fetchData();
+                foreach ($infos as $info) {
+                    $nom = $info[1];
+                    $PV = $info[2];
+                    $power = $dice->launchDice();
+                    $player2 = new Player($nom, $PV, $power, 0);
                 }
             endif;
             ?>
@@ -105,43 +120,48 @@ if (isset($_GET['new-player'])) {
         <?php
 
 
-        if (isset($_GET['player']) &&  isset($_GET['enemy'])) {
-            $personnage1->power = $dice->launchDice();
-            $personnage2->power = $dice->launchDice();
-            echo "<span class='perso1'>$personnage1->nom</span> possède $personnage1->PV points de vie et a $personnage1->power de power. <span class='perso2'>$personnage2->nom</span> possède $personnage2->PV points de vie et a $personnage2->power de power.<br>";
+        if (isset($_GET['player1']) &&  isset($_GET['player2'])) {
 
-            if ($personnage1->power === $personnage2->power) {
-                echo "Ils ont la même force. <br> Ils se serrent la main et vont boire un coup. <br> SUS A LA VIOLENCE !!! <img style='width:200px' src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Beer_mug_transparent.png/1024px-Beer_mug_transparent.png' alt='DRUNK MADAFAKA'/>";
-                header('refresh:10;url=index.php');
+            if (isset($player1) && isset($player2)) {
+                $player1->setPower($dice->launchDice());
+                $player2->setPower($dice->launchDice());
+
+                echo "<p><span class='perso1'>" . $player1->getNom() . "</span> possède " . $player1->getPV() . "points de vie et a " . $player1->getPower() . " power. <span class='perso2'>" . $player2->getNom() . "</span> possède " . $player2->getPV() . "points de vie et a " . $player2->getPower() . " de power.<br>";
+
+                if ($player1->getPower() === $player2->getPower()) {
+                    echo "Ils ont la même force. <br> Ils se serrent la main et vont boire un coup. <br> SUS A LA VIOLENCE !!! <img style='width:200px' src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Beer_mug_transparent.png/1024px-Beer_mug_transparent.png' alt='DRUNK MADAFAKA'/>";
+                    // header('refresh:10;url=index.php');
+                }
+                if ($player1->getPower() > $player2->getPower()) {
+                    echo "<br>";
+                    echo "<span class='perso1'>" . $player1->getNom() . "</span> va attaquer en 1er <br>";
+
+                    while ($player1->getPV() > 0 && $player2->getPV() > 0) {
+                        echo p1first($dice, $player1, $player2);
+                        echo p2first($dice, $player1, $player2);
+                    }
+                } elseif ($player1->getPower() < $player2->getPower()) {
+                    echo "<br>";
+                    echo "<span class='perso2'>" . $player2->getNom() . "</span> va attaquer en 1er <br>";
+
+                    while ($player1->getPV() > 0 && $player2->getPV() > 0) {
+                        echo p2first($dice, $player1, $player2);
+                        echo p1first($dice, $player1, $player2);
+                    }
+                };
+
+                if ($player1->getPV()  <= 0) {
+                    $database->delete($player1->getNom());
+                    echo "<span class='perso1'>" . $player1->getNom() . "</span> est mort(e) !</p>";
+                    $database->update($player2->getNom(), $player2->getPV());
+                };
+
+                if ($player2->getPV() <= 0) {
+                    $database->delete($player2->getNom());
+                    echo "<span class='perso2'>" . $player2->getNom() . "</span> est mort(e) !</p>";
+                    $database->update($player1->getNom(), $player1->getPV());
+                };
             }
-            if ($personnage1->power > $personnage2->power) {
-
-                echo "<br>";
-                echo "<span class='perso1'>" . $personnage1->nom . "</span> va attaquer en 1er <br>";
-                while ($personnage1->PV > 0 && $personnage2->PV > 0) {
-
-                    echo p1first($dice, $personnage1, $personnage2);
-                    echo p2first($dice, $personnage1, $personnage2);
-                }
-            } elseif ($personnage1->power < $personnage2->power) {
-
-                echo "<br>";
-                echo "<span class='perso2'>" . $personnage2->nom . "</span> va attaquer en 1er <br>";
-                while ($personnage1->PV > 0 && $personnage2->PV > 0) {
-
-                    echo p2first($dice, $personnage1, $personnage2);
-                    echo p1first($dice, $personnage1, $personnage2);
-                }
-            };
-            if ($personnage1->PV  <= 0) {
-                $database->delete("$personnage1->nom");
-                echo "<span class='perso1'>$personnage1->nom</span> est mort(e) !";
-            };
-
-            if ($personnage2->PV <= 0) {
-                $database->delete("$personnage2->nom");
-                echo "<span class='perso2'>$personnage2->nom</span> est mort(e) !";
-            };
         }
         ?>
 

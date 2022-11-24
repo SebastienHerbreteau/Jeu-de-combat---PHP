@@ -1,3 +1,7 @@
+:root {
+  --color1: rgb(170, 255, 255);
+  --color2: rgb(15, 29, 53);
+}
 * {
   margin: 0;
   padding: 0;

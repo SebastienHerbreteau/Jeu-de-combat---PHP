@@ -29,7 +29,12 @@ class Database
         return $this->connexion;
     }
 
-
+    public function prepReq(string $query, array $array = []): PDOStatement
+    {
+        $this->request = $this->connexion->prepare($query);
+        $this->request->execute($array);
+        return $this->request;
+    }
 
     public function create(string $name,  array $array = []): PDOStatement
     {
@@ -41,6 +46,13 @@ class Database
     public function read(string $name, array $array = []): PDOStatement
     {
         $this->request = $this->connexion->prepare("SELECT * FROM personnage WHERE nom LIKE '$name'");
+        $this->request->execute($array);
+        return $this->request;
+    }
+
+    public function update(string $name, string $PV, array $array = []): PDOStatement
+    {
+        $this->request = $this->connexion->prepare("UPDATE personnage SET PV = '$PV' WHERE nom LIKE '$name'");
         $this->request->execute($array);
         return $this->request;
     }

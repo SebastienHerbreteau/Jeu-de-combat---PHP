@@ -1,8 +1,7 @@
 body {
-  background: bisque;
+  background: var(--color2);
   padding: 80px;
 }
-
 form {
   padding: 20px;
   text-align: center;
@@ -12,29 +11,43 @@ form {
 }
 input[type="text"],
 input[type="submit"] {
-  background: bisque;
+  background: none;
   padding: 16px;
   outline: none;
-  border: 3px solid rgb(155, 121, 80);
-  border-radius: 32px;
-  color: brown;
+  color: var(--color1);
   font-size: 1rem;
   transition: 0.3s ease;
 }
-input[type="text"]:focus {
-  border: 1px solid rgb(155, 121, 80);
+
+input[type="submit"] {
+  border: 3px solid var(--color1);
+  border-radius: 32px;
+}
+input[type="text"] {
+  transition: 0.3s ease;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--color1);
 }
 input[type="submit"] {
-  background: rgb(155, 121, 80);
-  color: bisque;
-  transition: 0.3s ease;
+  background: var(--color2);
+  color: var(--color1);
+  transition: 0.55s ease;
 }
 input[type="submit"]:hover {
   cursor: pointer;
-  background: bisque;
-  color: rgb(155, 121, 80);
+  box-shadow: inset 0 0 100px var(--color1);
+  /* background: var(--color1); */
+  color: var(--color2);
 }
-
+p {
+  color: var(--color1);
+}
+select {
+  background: var(--color2);
+  color: white;
+  padding: 8px;
+}
 .fighting {
   display: flex;
   justify-content: space-around;
@@ -43,7 +56,6 @@ input[type="submit"]:hover {
 .fighter-left,
 .fighter-right {
   position: relative;
-  border-radius: 24px;
   color: white;
   width: 45%;
   height: 300px;
@@ -51,22 +63,69 @@ input[type="submit"]:hover {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  border: 2px solid rgba(0, 0, 0, 0.632);
+  /* border: 2px solid rgb(0, 0, 0); */
+}
+.fighter-left::after,
+.fighter-right::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgb(15, 29, 53);
+  background: linear-gradient(
+    90deg,
+    rgba(15, 29, 53, 1) 0%,
+    rgba(164, 190, 206, 0) 14%,
+    rgba(43, 59, 81, 0) 85%,
+    rgba(15, 29, 53, 1) 100%
+  );
+  /*, linear-gradient(
+      0deg,
+      rgba(15, 29, 53, 1) 0%,
+      rgba(164, 190, 206, 0) 14%,
+      rgba(43, 59, 81, 0) 85%,
+      rgba(15, 29, 53, 1) 100%
+    ); */
 }
 .fighter-left {
-  background: url("https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1129&q=80")
-    center/cover;
-  color: black;
+  background: url("img/player.png") center/cover;
+  text-shadow: -2px -2px 0 red, -6px -6px 2px black;
+  overflow: hidden;
 }
 .fighter-right {
-  background: url("https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1129&q=80")
-    center/cover;
-  color: black;
+  background: url("img/enemy.png") center/cover;
+  text-shadow: -1px -1px 0 red, 4px 4px 0 blue, -6px -6px 2px black;
+  overflow: hidden;
 }
 .vs {
   width: 40%;
+  animation: versus 0.9s 2s both;
+  /* 3s = delay */
 }
-
+@keyframes versus {
+  0% {
+    opacity: 0;
+    transform: scale3d(1, 1, 1);
+  }
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+}
 h2 {
   position: absolute;
   display: inline-block;
@@ -84,24 +143,55 @@ h3 {
   text-transform: uppercase;
 }
 
-.style-player{
+.style-player1 {
   text-shadow: 0 0 10px blue;
-  color: rgb(0, 158, 250);
+  color: var(--color1);
   text-align: center;
+  background: rgba(0, 0, 0, 0.664);
+  animation: player 2s linear infinite both;
 }
 
-.style-enemy{
+.style-player2 {
   text-shadow: 0 0 10px black;
   color: red;
   text-align: center;
+  background: rgba(0, 0, 0, 0.664);
+  animation: player 2s linear infinite both;
 }
 
-.perso1{
-  color: blue;
+@keyframes player {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
 }
 
-.perso2{
+.perso1 {
+  color: green;
+}
+
+.perso2 {
   color: red;
+}
+/* .fighting-container {
+  background: rgba(255, 255, 255, 0.733);
+} */
+.fighting-container p {
+  color: var(--color1);
 }
 /* .dice {
   position: absolute;
@@ -119,3 +209,12 @@ h3 {
   font-size: 30px;
   font-weight: bold;
 } */
+
+
+table {
+  margin-left: 50px;
+  color: white;
+  position:absolute;
+  top: 80px;
+}
+
